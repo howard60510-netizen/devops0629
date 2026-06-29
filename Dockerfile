@@ -1,11 +1,11 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /devops-demo/app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/ app/
+COPY  devops-demo/app/ app/
 
 # 安全基線：不要以 root 跑容器
 RUN useradd -m appuser
