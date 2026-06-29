@@ -1,0 +1,41 @@
+# Blue（現行版）與 Green（新版）跑同一顆 image:latest，
+# 只用環境變數 APP_VERSION 區分版本字串 —— demo 不必 build 兩顆 image。
+# Blue（現行版）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-demo-blue
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: devops-demo, version: blue}
+  template:
+    metadata:
+      labels: {app: devops-demo, version: blue}
+    spec:
+      containers:
+        - name: devops-demo
+          image: ghcr.io/4-learn/devops-demo:latest
+          env:
+            - {name: APP_VERSION, value: blue-v1}
+          ports: [{containerPort: 8000}]
+---
+# Green（新版）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-demo-green
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: devops-demo, version: green}
+  template:
+    metadata:
+      labels: {app: devops-demo, version: green}
+    spec:
+      containers:
+        - name: devops-demo
+          image: ghcr.io/4-learn/devops-demo:latest
+          env:
+            - {name: APP_VERSION, value: green-v2}
+          ports: [{containerPort: 8000}]

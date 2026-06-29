@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devops-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/4-learn/devops-config.git
+    targetRevision: HEAD
+    path: k8s              # ← ArgoCD 盯這個資料夾
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true          # git 刪了，cluster 也跟著刪
+      selfHeal: true       # 有人手動改 cluster，ArgoCD 會改回來

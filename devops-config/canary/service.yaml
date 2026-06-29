@@ -1,0 +1,26 @@
+# 兩個 Service：ingress 的主規則指向 stable、canary 規則指向 canary。
+# stable Service：選 track: stable 的 pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-demo-stable
+spec:
+  selector:
+    app: devops-demo
+    track: stable
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+# canary Service：選 track: canary 的 pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-demo-canary
+spec:
+  selector:
+    app: devops-demo
+    track: canary
+  ports:
+    - port: 8000
+      targetPort: 8000
