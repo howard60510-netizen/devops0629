@@ -1,0 +1,41 @@
+# Stable（穩定版）與 Canary（金絲雀新版）跑同一顆 image:latest，
+# 一樣用環境變數 APP_VERSION 區分，方便數流量比例。
+# Stable（穩定版，吃大部分流量）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-demo-stable
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: devops-demo, track: stable}
+  template:
+    metadata:
+      labels: {app: devops-demo, track: stable}
+    spec:
+      containers:
+        - name: devops-demo
+          image: ghcr.io/4-learn/devops-demo:latest
+          env:
+            - {name: APP_VERSION, value: stable-v1}
+          ports: [{containerPort: 8000}]
+---
+# Canary（金絲雀新版，只吃 5% 流量）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-demo-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: devops-demo, track: canary}
+  template:
+    metadata:
+      labels: {app: devops-demo, track: canary}
+    spec:
+      containers:
+        - name: devops-demo
+          image: ghcr.io/4-learn/devops-demo:latest
+          env:
+            - {name: APP_VERSION, value: canary-v2}
+          ports: [{containerPort: 8000}]

@@ -1,0 +1,26 @@
+# 主 ingress：穩定版
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devops-demo-main
+spec:
+  rules:
+    - host: devops-demo.example.com
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: devops-demo-stable, port: {number: 8000}}}}
+---
+# canary ingress：新版只分 5% 流量
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devops-demo-canary
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "5"   # ← 慢慢往上加：5 → 25 → 50 → 100
+spec:
+  rules:
+    - host: devops-demo.example.com
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: devops-demo-canary, port: {number: 8000}}}}
